@@ -1,7 +1,12 @@
 #include <catch2/catch.hpp>
 #include "PCLlib/pcltable.h"
 
-TEST_CASE("Should fail")
+TEST_CASE("Create table")
 {
-    REQUIRE(true == false);
+    PCL_table* t = PCL_create();
+    REQUIRE(t != NULL);
+    REQUIRE(PCL_size(t) == 0);
+    REQUIRE(PCL_asize(t) > 0);
+    REQUIRE(PCL_capacity(t) > 0);
+    PCL_destroy(t);
 }
