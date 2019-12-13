@@ -83,6 +83,7 @@ typedef struct PCLvector_s PCLvector;
         (v).arr[(v).size++] = (x);                                             \
     } while (0)
 #define PCLvector_pop(v) ((v).arr[--(v).size])
+#define PCLvector_back(v) PCLvector_A(v, (v).size - 1)
 
 // private functions:
 #define PCLvector__calcsize(size)                                              \
