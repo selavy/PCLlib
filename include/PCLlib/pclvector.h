@@ -49,8 +49,7 @@ typedef int type;
         type* arr;                                                             \
     }
 
-#define PCLvector_create()                                                     \
-    {}
+#define PCLvector_create() {}
 #define PCLvector_initialize(v) memset(&(v), 0, sizeof(v));
 #define PCLvector_finalize(v)                                                  \
     do {                                                                       \
