@@ -110,6 +110,9 @@ TEST_CASE("Vector copy")
         PCLvector_copy(a, b);
         REQUIRE(PCLvector_empty(a) == true);
         REQUIRE(PCLvector_size(a)  == 0);
+
+        PCLvector_destroy(a);
+        PCLvector_destroy(b);
     }
 
     SECTION("Copy empty vector to non-empty vector")
@@ -125,6 +128,9 @@ TEST_CASE("Vector copy")
         PCLvector_copy(a, b);
         REQUIRE(PCLvector_empty(a) == true);
         REQUIRE(PCLvector_size(a)  == 0);
+
+        PCLvector_destroy(a);
+        PCLvector_destroy(b);
     }
 
     SECTION("Copy non-empty vector to empty vector")
@@ -147,6 +153,9 @@ TEST_CASE("Vector copy")
         for (int i = 0; i < PCLvector_size(b); ++i) {
             REQUIRE(PCLvector_A(a, i) == PCLvector_A(b, i));
         }
+
+        PCLvector_destroy(a);
+        PCLvector_destroy(b);
     }
 
     SECTION("Copy larger vector to non-empty vector")
@@ -166,5 +175,8 @@ TEST_CASE("Vector copy")
         for (int i = 0; i < PCLvector_size(b); ++i) {
             REQUIRE(PCLvector_A(a, i) == PCLvector_A(b, i));
         }
+
+        PCLvector_destroy(a);
+        PCLvector_destroy(b);
     }
 }

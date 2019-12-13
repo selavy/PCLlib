@@ -1,6 +1,7 @@
 add_executable(unittest
     test_pcltable.cpp
     test_pclvector.cpp
+    test_pclarray.cpp
     )
 set_target_properties(unittest PROPERTIES CXX_STANDARD 17)
 target_link_libraries(unittest
