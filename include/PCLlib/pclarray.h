@@ -27,7 +27,8 @@ typedef PCLarray__header_s PCLarray__header;
 
 /* TODO(selavy): maybe just always allocate header to remove NULL checks */
 #define PCLarray_create() NULL
-#define PCLarray_destroy(v) free((v) ? PCLarray__h(v) : NULL);
+#define PCLarray_destroy(v)                                                    \
+    PCL_freearray((v) ? PCLarray__h(v) : NULL, PCLarray_asize(v), sizeof(*v));
 #define PCLarray_A(v, i) (v)[i]
 #define PCLarray_size(v) ((v) ? PCLarray__h(v)->size : 0)
 #define PCLarray_asize(v) ((v) ? PCLarray__h(v)->asize : 0)
