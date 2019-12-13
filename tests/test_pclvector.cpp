@@ -100,3 +100,72 @@ TEST_CASE("Integer vector stress test")
 
     PCLvector_finalize(v1);
 }
+
+TEST_CASE("Vector copy")
+{
+    SECTION("Copy empty vector")
+    {
+        PCLvector a = PCLvector_create();
+        PCLvector b = PCLvector_create();
+
+        PCLvector_copy(a, b);
+        REQUIRE(PCLvector_empty(a) == true);
+        REQUIRE(PCLvector_size(a)  == 0);
+    }
+
+    SECTION("Copy empty vector to non-empty vector")
+    {
+        PCLvector a = PCLvector_create();
+        PCLvector b = PCLvector_create();
+
+        for (int i = 0; i < 256; ++i) {
+            PCLvector_push(a, 1);
+        }
+        REQUIRE(PCLvector_empty(a) == false);
+
+        PCLvector_copy(a, b);
+        REQUIRE(PCLvector_empty(a) == true);
+        REQUIRE(PCLvector_size(a)  == 0);
+    }
+
+    SECTION("Copy non-empty vector to empty vector")
+    {
+        PCLvector a = PCLvector_create();
+        PCLvector b = PCLvector_create();
+
+        REQUIRE(PCLvector_capacity(a) == 0);
+        REQUIRE(PCLvector_empty(a) == true);
+
+        for (int i = 0; i < 256; ++i) {
+            PCLvector_push(b, 1);
+        }
+        REQUIRE(PCLvector_empty(b) == false);
+
+        PCLvector_copy(a, b);
+        REQUIRE(PCLvector_empty(a) == false);
+        REQUIRE(PCLvector_size(a)  == PCLvector_size(b));
+
+        for (int i = 0; i < PCLvector_size(b); ++i) {
+            REQUIRE(PCLvector_A(a, i) == PCLvector_A(b, i));
+        }
+    }
+
+    SECTION("Copy larger vector to non-empty vector")
+    {
+        PCLvector a = PCLvector_create();
+        PCLvector b = PCLvector_create();
+
+        for (int i = 0; i < 256; ++i) {
+            PCLvector_push(a, 1);
+        }
+        for (int i = 0; i < 2056; ++i) {
+            PCLvector_push(b, 2);
+        }
+        PCLvector_copy(a, b);
+
+        REQUIRE(PCLvector_size(a) == PCLvector_size(b));
+        for (int i = 0; i < PCLvector_size(b); ++i) {
+            REQUIRE(PCLvector_A(a, i) == PCLvector_A(b, i));
+        }
+    }
+}
