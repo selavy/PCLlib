@@ -3,9 +3,12 @@
 #include <random>
 #include <vector>
 
+typedef PCLarray_t(int) IntArray;
+using F64Array = PCLarray_t(double);
+
 TEST_CASE("Array push")
 {
-    PCLarray a = PCLarray_create();
+    IntArray a = PCLarray_create();
 
     REQUIRE(PCLarray_size(a) == 0);
     REQUIRE(PCLarray_asize(a) == 0);

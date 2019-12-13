@@ -23,7 +23,7 @@ struct PCLarray__header_s
 };
 typedef PCLarray__header_s PCLarray__header;
 
-typedef type* PCLarray;
+#define PCLarray_t(type) type*
 
 #define PCLarray__h(v) ((PCLarray__header*)(v)-1)
 
