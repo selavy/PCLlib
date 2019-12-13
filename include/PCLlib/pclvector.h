@@ -59,8 +59,8 @@ typedef struct PCLvector_s PCLvector;
         (v).asize = 0;                                                         \
     } while (0)
 #define PCLvector_A(v, i) (v).arr[i]
-#define PCLvector_size(v) (v).size
-#define PCLvector_asize(v) (v).asize
+#define PCLvector_size(v) ((v).size)
+#define PCLvector_asize(v) ((v).asize)
 #define PCLvector_capacity(v) PCLvector_asize(v)
 #define PCLvector_empty(v) (PCLvector_size(v) == 0)
 #define PCLvector_clear(v) PCLvector_finalize(v)
