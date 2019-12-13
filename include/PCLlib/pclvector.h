@@ -12,7 +12,7 @@
 #define PCL_freearray(ptr, nmemb, size) free(ptr)
 #endif
 
-#if 0 // __cplusplus >= 201103L
+#if __cplusplus >= 201103L
 #define PCL_reallocarray2(ptr, nmemb, size)                                    \
     static_cast<decltype(ptr)>(reallocarray(ptr, nmemb, size))
 #elif defined(__cplusplus)
@@ -21,7 +21,7 @@
 #define PCL_reallocarray2(ptr, nmemb, size)                                    \
     static_cast<__typeof__(ptr)>(reallocarray(ptr, nmemb, size))
 #else
-// TODO: how to handle pre-c++11 without `typeof`?
+// TODO(selavy): how to handle pre-c++11 without `typeof`?
 #error "Must use a C++ compiler with support for typeof or C++-11"
 #endif
 
@@ -29,11 +29,12 @@
 #define PCL_reallocarray2 PCL_reallocarray
 #endif
 
-/* TODO: tune? */
+/* TODO(selavy): tune? */
 #ifndef PCLVECTOR_DEFAULT_SIZE
 #define PCLVECTOR_DEFAULT_SIZE 2
 #endif
 
+/* TODO(selavy): 1.5 or 2? */
 #ifndef PCLVECTOR_GROWTH_FACTOR
 #define PCLVECTOR_GROWTH_FACTOR 1.5
 #endif
@@ -47,7 +48,6 @@ typedef int type;
         int asize;                                                             \
         type* arr;                                                             \
     }
-// typedef struct PCLvector_s PCLvector;
 
 #define PCLvector_create()                                                     \
     {}
