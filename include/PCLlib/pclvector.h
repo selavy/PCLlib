@@ -5,7 +5,11 @@
 #include <string.h>
 
 #ifndef PCL_reallocarray
+#ifdef reallocarray
 #define PCL_reallocarray(ptr, nmemb, size) reallocarray(ptr, nmemb, size)
+#else
+#define PCL_reallocarray(ptr, nmemb, size) realloc(ptr, (nmemb) * (size))
+#endif
 #endif
 
 #ifndef PCL_freearray
@@ -49,7 +53,8 @@ typedef int type;
         type* arr;                                                             \
     }
 
-#define PCLvector_create() {}
+#define PCLvector_create()                                                     \
+    {}
 #define PCLvector_initialize(v) memset(&(v), 0, sizeof(v));
 #define PCLvector_finalize(v)                                                  \
     do {                                                                       \
@@ -67,6 +72,11 @@ typedef int type;
     do {                                                                       \
         (v).asize = newsize;                                                   \
         (v).arr = PCL_reallocarray2((v).arr, (v).asize, sizeof((v).arr[0]));   \
+    } while (0)
+#define PCLvector_reserve(v, newsize)                                          \
+    do {                                                                       \
+        if (newsize > (v).asize)                                               \
+            PCL_resize(v, newsize);                                            \
     } while (0)
 #define PCLvector_copy(dst, src)                                               \
     do {                                                                       \
