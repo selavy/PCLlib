@@ -3,9 +3,6 @@
 #include <random>
 #include "PCLlib/pclvector.h"
 
-// using IntVec = PCLvector_t(int);
-// typedef PCLVector_t(int) IntVec;
-
 using IntVec = PCLvector;
 
 TEST_CASE("Integer vector push")
