@@ -40,18 +40,18 @@
 
 typedef int type;
 
-struct PCLvector_s
-{
-    int size;
-    int asize;
-    type* arr;
-};
-typedef struct PCLvector_s PCLvector;
+#define PCLvector_t(type)                                                      \
+    struct                                                                     \
+    {                                                                          \
+        int size;                                                              \
+        int asize;                                                             \
+        type* arr;                                                             \
+    }
+// typedef struct PCLvector_s PCLvector;
 
-// clang-format off
-#define PCLvector_create() {}
-// clang-format on
-#define PCLvector_initialize(v) memset(v, 0, sizeof(PCLvector));
+#define PCLvector_create()                                                     \
+    {}
+#define PCLvector_initialize(v) memset(&(v), 0, sizeof(v));
 #define PCLvector_finalize(v)                                                  \
     do {                                                                       \
         PCL_freearray((v).arr, (v).asize, sizeof((v).arr[0]));                 \

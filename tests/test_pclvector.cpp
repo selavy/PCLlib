@@ -3,7 +3,8 @@
 #include <random>
 #include "PCLlib/pclvector.h"
 
-using IntVec = PCLvector;
+typedef PCLvector_t(int) IntVec;
+// using IntVec = PCLvector_t(int);
 
 TEST_CASE("Integer vector push")
 {
@@ -102,8 +103,8 @@ TEST_CASE("Vector copy")
 {
     SECTION("Copy empty vector")
     {
-        PCLvector a = PCLvector_create();
-        PCLvector b = PCLvector_create();
+        IntVec a = PCLvector_create();
+        IntVec b = PCLvector_create();
 
         PCLvector_copy(a, b);
         REQUIRE(PCLvector_empty(a) == true);
@@ -112,8 +113,8 @@ TEST_CASE("Vector copy")
 
     SECTION("Copy empty vector to non-empty vector")
     {
-        PCLvector a = PCLvector_create();
-        PCLvector b = PCLvector_create();
+        IntVec a = PCLvector_create();
+        IntVec b = PCLvector_create();
 
         for (int i = 0; i < 256; ++i) {
             PCLvector_push(a, 1);
@@ -127,8 +128,8 @@ TEST_CASE("Vector copy")
 
     SECTION("Copy non-empty vector to empty vector")
     {
-        PCLvector a = PCLvector_create();
-        PCLvector b = PCLvector_create();
+        IntVec a = PCLvector_create();
+        IntVec b = PCLvector_create();
 
         REQUIRE(PCLvector_capacity(a) == 0);
         REQUIRE(PCLvector_empty(a) == true);
@@ -149,8 +150,8 @@ TEST_CASE("Vector copy")
 
     SECTION("Copy larger vector to non-empty vector")
     {
-        PCLvector a = PCLvector_create();
-        PCLvector b = PCLvector_create();
+        IntVec a = PCLvector_create();
+        IntVec b = PCLvector_create();
 
         for (int i = 0; i < 256; ++i) {
             PCLvector_push(a, 1);
