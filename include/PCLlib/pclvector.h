@@ -21,7 +21,7 @@
 #define PCL_reallocarray2(ptr, nmemb, size)                                    \
     static_cast<__typeof__(ptr)>(reallocarray(ptr, nmemb, size))
 #else
-// TODO(selavy): how to handle pre-c++11 without `typeof`?
+/* TODO(selavy): how to handle pre-c++11 without `typeof`? */
 #error "Must use a C++ compiler with support for typeof or C++-11"
 #endif
 
@@ -85,8 +85,8 @@ typedef int type;
 #define PCLvector_pop(v) ((v).arr[--(v).size])
 #define PCLvector_back(v) PCLvector_A(v, (v).size - 1)
 
-// private functions:
+/* private functions: */
 #define PCLvector__calcsize(size)                                              \
     ((size) != 0 ? (size)*PCLVECTOR_GROWTH_FACTOR : PCLVECTOR_DEFAULT_SIZE)
 
-#endif // PCL_VECTOR__H_
+#endif /* PCL_VECTOR__H_ */
