@@ -55,13 +55,13 @@ typedef int type;
 
 #define PCLvector_create()                                                     \
     {}
-#define PCLvector_initialize(v) memset(&(v), 0, sizeof(v));
-#define PCLvector_finalize(v)                                                  \
+#define PCLvector_destroy(v)                                                   \
     do {                                                                       \
         PCL_freearray((v).arr, (v).asize, sizeof((v).arr[0]));                 \
         (v).size = 0;                                                          \
         (v).asize = 0;                                                         \
     } while (0)
+#define PCLvector_initialize(v) ((v).size = (v).asize = 0, (v).arr = NULL)
 #define PCLvector_A(v, i) (v).arr[i]
 #define PCLvector_size(v) ((v).size)
 #define PCLvector_asize(v) ((v).asize)

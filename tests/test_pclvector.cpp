@@ -10,6 +10,7 @@ TEST_CASE("Integer vector push")
 {
     constexpr int N = 256;
     IntVec v = PCLvector_create();
+    PCLvector_initialize(v);
 
     REQUIRE(PCLvector_size(v) == 0);
     REQUIRE(PCLvector_empty(v) == true);
@@ -31,7 +32,7 @@ TEST_CASE("Integer vector push")
     }
     REQUIRE(PCLvector_empty(v) == true);
 
-    PCLvector_finalize(v);
+    PCLvector_destroy(v);
 }
 
 TEST_CASE("Integer vector stress test")
@@ -96,7 +97,7 @@ TEST_CASE("Integer vector stress test")
         REQUIRE(PCLvector_A(v1, i) == v2[i]);
     }
 
-    PCLvector_finalize(v1);
+    PCLvector_destroy(v1);
 }
 
 TEST_CASE("Vector copy")
