@@ -14,8 +14,6 @@
 #define PCL_freearray(ptr, nmemb, size) free(ptr)
 #endif
 
-typedef int type;
-
 struct PCLarray__header_s
 {
     int size;
