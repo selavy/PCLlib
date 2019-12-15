@@ -61,9 +61,11 @@ typedef PCLarray__header_s PCLarray__header;
 #define PCLarray_copy(dst, src)                                                \
     do {                                                                       \
         if (PCLarray_empty(dst)) {                                             \
-            if (!PCLarray_empty(src))                                          \
+            if (!PCLarray_empty(src)) {                                        \
                 PCLarray_resize(dst, PCLarray_size(src));                      \
-            memcpy(dst, src, sizeof(*dst) * PCLarray_size(src));               \
+                memcpy(dst, src, sizeof(*dst) * PCLarray_size(src));           \
+                PCLarray__h(dst)->size = PCLarray_size(src);                   \
+            }                                                                  \
         } else if (PCLarray_empty(src)) {                                      \
             assert(!PCLarray_empty(dst));                                      \
             PCLarray__h(dst)->size = 0;                                        \

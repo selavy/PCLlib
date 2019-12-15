@@ -40,47 +40,6 @@ TEST_CASE("Array push")
     PCLarray_destroy(a);
 }
 
-TEST_CASE("Array growth")
-{
-    IntArray b = PCLarray_create();
-
-    constexpr int N = 16;
-    struct {
-        int size;
-        int asize;
-    } expects[N] = {
-        { 1, 1 },
-        { 2, 3 },
-        { 3, 3 },
-        { 4, 7 },
-        { 5, 7 },
-        { 6, 7 },
-        { 7, 7 },
-        { 8, 15 },
-        { 9, 15 },
-        { 10, 15 },
-        { 11, 15 },
-        { 12, 15 },
-        { 13, 15 },
-        { 14, 15 },
-        { 15, 15 },
-        { 16, 31 },
-    };
-
-    for (int i = 0; i < N; ++i) {
-        PCLarray_push(b, i);
-        REQUIRE(PCLarray_size(b) == expects[i].size);
-        REQUIRE(PCLarray_asize(b) == expects[i].asize);
-    }
-    REQUIRE(PCLarray_size(b) == N);
-
-    for (int i = 0; i < N; ++i) {
-        REQUIRE(PCLarray_A(b, i) == i);
-    }
-
-    PCLarray_destroy(b);
-}
-
 TEST_CASE("Array copy")
 {
     SECTION("Copy empty array to empty array")
@@ -111,14 +70,89 @@ TEST_CASE("Array copy")
         }
         REQUIRE(PCLarray_size(b) == N);
 
+        PCLarray_copy(b, a);
+
+        REQUIRE(PCLarray_empty(b) == true);
+        REQUIRE(PCLarray_size(b) == PCLarray_size(a));
+
+        PCLarray_destroy(b);
+        PCLarray_destroy(a);
+    }
+
+    SECTION("Copy non-empty array to empty array")
+    {
+        IntArray a = PCLarray_create();
+        IntArray b = PCLarray_create();
+
+        const int N = 16;
         for (int i = 0; i < N; ++i) {
-            REQUIRE(PCLarray_A(b, i) == i);
+            PCLarray_push(a, i);
         }
+        REQUIRE(PCLarray_size(a) == N);
 
         PCLarray_copy(b, a);
 
-        REQUIRE(PCLarray_empty(b));
+        REQUIRE(PCLarray_empty(b) == false);
         REQUIRE(PCLarray_size(b) == PCLarray_size(a));
+        for (int i = 0; i < PCLarray_size(b); ++i) {
+            REQUIRE(b[i] == a[i]);
+        }
+
+        PCLarray_destroy(b);
+        PCLarray_destroy(a);
+    }
+
+    SECTION("Copy larger non-empty array to non-empty array")
+    {
+        IntArray a = PCLarray_create();
+        IntArray b = PCLarray_create();
+
+        constexpr int N1 = 256;
+        constexpr int N2 = 16;
+
+        for (int i = 0; i < N1; ++i) {
+            PCLarray_push(a, i);
+        }
+        for (int i = 0; i < N2; ++i) {
+            PCLarray_push(b, 41);
+        }
+        REQUIRE(PCLarray_size(a) == N1);
+        REQUIRE(PCLarray_size(b) == N2);
+
+        PCLarray_copy(b, a);
+
+        REQUIRE(PCLarray_size(b) == PCLarray_size(a));
+        for (int i = 0; i < PCLarray_size(b); ++i) {
+            REQUIRE(b[i] == a[i]);
+        }
+
+        PCLarray_destroy(b);
+        PCLarray_destroy(a);
+    }
+
+    SECTION("Copy smaller non-empty array to non-empty array")
+    {
+        IntArray a = PCLarray_create();
+        IntArray b = PCLarray_create();
+
+        constexpr int N1 = 16;
+        constexpr int N2 = 256;
+
+        for (int i = 0; i < N1; ++i) {
+            PCLarray_push(a, i);
+        }
+        for (int i = 0; i < N2; ++i) {
+            PCLarray_push(b, 41);
+        }
+        REQUIRE(PCLarray_size(a) == N1);
+        REQUIRE(PCLarray_size(b) == N2);
+
+        PCLarray_copy(b, a);
+
+        REQUIRE(PCLarray_size(b) == PCLarray_size(a));
+        for (int i = 0; i < PCLarray_size(b); ++i) {
+            REQUIRE(b[i] == a[i]);
+        }
 
         PCLarray_destroy(b);
         PCLarray_destroy(a);
