@@ -17,6 +17,19 @@
 #define PCL_freearray(ptr, nmemb, size) free(ptr)
 #endif
 
+#if __cplusplus >= 201103L
+#define PCLarray__castto(v, h) reinterpret_cast<decltype(v)>(h)
+#elif defined(__cplusplus)
+#if defined(__GNUC__)
+#define PCLarray__castto(v, h) reinterpret_cast<typeof(v)>(h)
+#else
+/* TODO(selavy): how to handle pre-c++11 without `typeof`? */
+#error "Must use a C++ compiler with support for typeof or C++-11"
+#endif
+#else
+#define PCLarray__castto(v, h)
+#endif
+
 struct PCLarray__header_s
 {
     int size;
@@ -47,7 +60,7 @@ typedef PCLarray__header_s PCLarray__header;
           PCL_realloc(PCLarray__s(v), PCLarray__sz(v, nsize));                 \
         h->size = osize;                                                       \
         h->asize = nsize;                                                      \
-        v = (typeof(v))(h + 1);                                                \
+        v = PCLarray__castto(v, (h + 1));                                      \
     } while (0)
 /* TODO(selavy): tune growth */
 #define PCLarray__newsize(v) (2 * PCLarray_asize(v) + 1)
