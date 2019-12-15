@@ -1,6 +1,9 @@
 #ifndef PCL_ARRAY__H_
 #define PCL_ARRAY__H_
 
+#include <stdlib.h>
+#include <string.h>
+
 #ifndef PCL_realloc
 #ifdef __cplusplus
 #define PCL_realloc(ptr, size)                                                 \
@@ -58,5 +61,21 @@ typedef PCLarray__header_s PCLarray__header;
         (v)[PCLarray__h(v)->size++] = (x);                                     \
     } while (0)
 #define PCLarray_pop(v) ((v)[--PCLarray__h(v)->size])
+#define PCLarray_copy(dst, src)                                                \
+    do {                                                                       \
+        if (PCLarray_empty(dst)) {                                             \
+            if (!PCLarray_empty(src))                                          \
+                PCLarray_resize(dst, PCLarray_size(src));                      \
+            memcpy(dst, src, sizeof(*dst) * PCLarray_size(src));               \
+        } else if (PCLarray_empty(src)) {                                      \
+            assert(!PCLarray_empty(dst));                                      \
+            PCLarray__h(dst)->size = 0;                                        \
+        } else {                                                               \
+            if (PCLarray_asize(dst) < PCLarray_size(src))                      \
+                PCLarray_resize(dst, PCLarray_size(src));                      \
+            memcpy(dst, src, sizeof(*(dst)) * PCLarray_size(src));             \
+            PCLarray__h(dst)->size = PCLarray_size(src);                       \
+        }                                                                      \
+    } while (0)
 
 #endif // PCL_ARRAY__H_
