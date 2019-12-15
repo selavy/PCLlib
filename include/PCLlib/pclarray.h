@@ -31,7 +31,8 @@ typedef PCLarray__header_s PCLarray__header;
 
 /* TODO(selavy): maybe just always allocate header to remove NULL checks */
 #define PCLarray_create() NULL
-#define PCLarray_destroy(v) PCL_freearray(PCLarray__s(v), PCLarray_asize(v), sizeof(*v));
+#define PCLarray_destroy(v)                                                    \
+    PCL_freearray(PCLarray__s(v), PCLarray_asize(v), sizeof(*v));
 #define PCLarray_A(v, i) (v)[i]
 #define PCLarray_size(v) ((v) ? PCLarray__h(v)->size : 0)
 #define PCLarray_asize(v) ((v) ? PCLarray__h(v)->asize : 0)
@@ -40,11 +41,12 @@ typedef PCLarray__header_s PCLarray__header;
 #define PCLarray__sz(v, size) (sizeof(PCLarray__header) + (size) * sizeof(*(v)))
 #define PCLarray_resize(v, newsize)                                            \
     do {                                                                       \
-        int size = PCLarray_size(v);                                           \
+        int osize = PCLarray_size(v);                                          \
+        int nsize = (newsize);                                                 \
         PCLarray__header* h =                                                  \
-          PCL_realloc(PCLarray__s(v), PCLarray__sz(v, newsize));               \
-        h->size = size;                                                        \
-        h->asize = newsize;                                                    \
+          PCL_realloc(PCLarray__s(v), PCLarray__sz(v, nsize));                 \
+        h->size = osize;                                                       \
+        h->asize = nsize;                                                      \
         v = (typeof(v))(h + 1);                                                \
     } while (0)
 /* TODO(selavy): tune growth */
