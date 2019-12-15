@@ -70,6 +70,10 @@ TEST_CASE("Array copy")
         }
         REQUIRE(PCLarray_size(b) == N);
 
+        for (int i = 0; i < N; ++i) {
+            REQUIRE(PCLarray_A(b, i) == i);
+        }
+
         // PCLarray_copy(b, a);
 
         // REQUIRE(PCLarray_empty(b));

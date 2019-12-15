@@ -27,30 +27,25 @@ typedef PCLarray__header_s PCLarray__header;
 #define PCLarray_t(type) type*
 
 #define PCLarray__h(v) ((PCLarray__header*)(v)-1)
+#define PCLarray__s(v) (v) ? PCLarray__h(v) : NULL
 
 /* TODO(selavy): maybe just always allocate header to remove NULL checks */
 #define PCLarray_create() NULL
-#define PCLarray_destroy(v)                                                    \
-    PCL_freearray((v) ? PCLarray__h(v) : NULL, PCLarray_asize(v), sizeof(*v));
+#define PCLarray_destroy(v) PCL_freearray(PCLarray__s(v), PCLarray_asize(v), sizeof(*v));
 #define PCLarray_A(v, i) (v)[i]
 #define PCLarray_size(v) ((v) ? PCLarray__h(v)->size : 0)
 #define PCLarray_asize(v) ((v) ? PCLarray__h(v)->asize : 0)
 #define PCLarray_capacity(v) PCLarray_asize(v)
 #define PCLarray_empty(v) (PCLarray_size(v) == 0)
+#define PCLarray__sz(v, size) (sizeof(PCLarray__header) + (size) * sizeof(*(v)))
 #define PCLarray_resize(v, newsize)                                            \
     do {                                                                       \
-        PCLarray__header* h;                                                   \
-        if (!v) {                                                              \
-            h = PCL_realloc(                                                   \
-              v, newsize * sizeof(*(v)) + sizeof(PCLarray__header));           \
-            h->size = 0;                                                       \
-        } else {                                                               \
-            h =                                                                \
-              PCL_realloc(PCLarray__h(v),                                      \
-                          newsize * sizeof(*(v)) + sizeof(PCLarray__header));  \
-        }                                                                      \
-        h->asize = (newsize);                                                  \
-        (v) = (typeof(v))(h + 1);                                              \
+        int size = PCLarray_size(v);                                           \
+        PCLarray__header* h =                                                  \
+          PCL_realloc(PCLarray__s(v), PCLarray__sz(v, newsize));               \
+        h->size = size;                                                        \
+        h->asize = newsize;                                                    \
+        v = (typeof(v))(h + 1);                                                \
     } while (0)
 /* TODO(selavy): tune growth */
 #define PCLarray__newsize(v) (2 * PCLarray_asize(v) + 1)
