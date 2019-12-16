@@ -1,16 +1,15 @@
-#include <catch2/catch.hpp>
-#include <vector>
-#include <random>
 #include "PCLlib/pclvector.h"
+#include <catch2/catch.hpp>
+#include <random>
+#include <vector>
 
 typedef PCLvector_t(int) IntVec;
-// using IntVec = PCLvector_t(int);
+using IntVec2 = PCLvector_t(int);
 
 TEST_CASE("Integer vector push")
 {
     constexpr int N = 256;
     IntVec v = PCLvector_create();
-    PCLvector_initialize(v);
 
     REQUIRE(PCLvector_size(v) == 0);
     REQUIRE(PCLvector_empty(v) == true);
@@ -55,7 +54,8 @@ TEST_CASE("Integer vector stress test")
         REQUIRE(PCLvector_A(v1, i) == v2[i]);
     }
 
-    enum Action {
+    enum Action
+    {
         PUSH,
         POP,
         ACCESS,
@@ -109,7 +109,7 @@ TEST_CASE("Vector copy")
 
         PCLvector_copy(a, b);
         REQUIRE(PCLvector_empty(a) == true);
-        REQUIRE(PCLvector_size(a)  == 0);
+        REQUIRE(PCLvector_size(a) == 0);
 
         PCLvector_destroy(a);
         PCLvector_destroy(b);
@@ -127,7 +127,7 @@ TEST_CASE("Vector copy")
 
         PCLvector_copy(a, b);
         REQUIRE(PCLvector_empty(a) == true);
-        REQUIRE(PCLvector_size(a)  == 0);
+        REQUIRE(PCLvector_size(a) == 0);
 
         PCLvector_destroy(a);
         PCLvector_destroy(b);
@@ -148,7 +148,7 @@ TEST_CASE("Vector copy")
 
         PCLvector_copy(a, b);
         REQUIRE(PCLvector_empty(a) == false);
-        REQUIRE(PCLvector_size(a)  == PCLvector_size(b));
+        REQUIRE(PCLvector_size(a) == PCLvector_size(b));
 
         for (int i = 0; i < PCLvector_size(b); ++i) {
             REQUIRE(PCLvector_A(a, i) == PCLvector_A(b, i));

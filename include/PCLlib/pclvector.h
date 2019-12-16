@@ -61,7 +61,7 @@ typedef int type;
         (v).size = 0;                                                          \
         (v).asize = 0;                                                         \
     } while (0)
-#define PCLvector_initialize(v) ((v).size = (v).asize = 0, (v).arr = NULL)
+#define PCLvector_init(v) ((v).size = (v).asize = 0, (v).arr = NULL)
 #define PCLvector_A(v, i) (v).arr[i]
 #define PCLvector_size(v) ((v).size)
 #define PCLvector_asize(v) ((v).asize)
@@ -89,7 +89,7 @@ typedef int type;
     do {                                                                       \
         if ((v).size == (v).asize)                                             \
             PCLvector_resize(v, PCLvector__calcsize((v).asize));               \
-        (v).arr[(v).size++] = (x);                                             \
+        (v).arr[(v).size++] = x;                                               \
     } while (0)
 #define PCLvector_pop(v) ((v).arr[--(v).size])
 #define PCLvector_back(v) PCLvector_A(v, (v).size - 1)
