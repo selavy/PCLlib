@@ -15,6 +15,11 @@ typedef struct custom_type_s custom_type;
 
 typedef PCLvector_t(custom_type) CustomVec;
 
+int ctcmp(custom_type a, custom_type b)
+{
+    return a.x == b.x && a.y == b.y ? 0 : 1;
+}
+
 int dblcmp(double x, double y)
 {
     double eps = 0.0001;
@@ -34,7 +39,7 @@ int main(int argc, char** argv)
     I32Vec ivec;
     F64Vec fvec;
     CharVec cvec;
-    CustomVec cmvec;
+    CustomVec ctvec, src, dst;
 
     {
         PCLvector_init(ivec);
@@ -88,29 +93,103 @@ int main(int argc, char** argv)
     }
 
     {
-        PCLvector_init(cmvec);
+        PCLvector_init(ctvec);
         for (i = 0; i < N1; ++i) {
             custom_type ct;
-            PCLvector_push(cmvec, ct);
-            PCLvector_back(cmvec).x = 42 + i;
-            PCLvector_back(cmvec).y = 43 + i;
-            assert(PCLvector_size(cmvec) == i + 1);
+            PCLvector_push(ctvec, ct);
+            PCLvector_back(ctvec).x = 42 + i;
+            PCLvector_back(ctvec).y = 43 + i;
+            assert(PCLvector_size(ctvec) == i + 1);
         }
-        assert(PCLvector_asize(cmvec) >= PCLvector_size(cmvec));
+        assert(PCLvector_asize(ctvec) >= PCLvector_size(ctvec));
         for (i = 0; i < N2; ++i) {
-            PCLvector_pop(cmvec);
+            PCLvector_pop(ctvec);
         }
-        assert(PCLvector_size(cmvec) == N1 - N2);
-        for (i = 0; i < PCLvector_size(cmvec); ++i) {
-            assert(PCLvector_A(cmvec, i).x == 42 + i);
-            assert(PCLvector_A(cmvec, i).y == 43 + i);
+        assert(PCLvector_size(ctvec) == N1 - N2);
+        for (i = 0; i < PCLvector_size(ctvec); ++i) {
+            assert(PCLvector_A(ctvec, i).x == 42 + i);
+            assert(PCLvector_A(ctvec, i).y == 43 + i);
+        }
+    }
+
+    PCLvector_init(src);
+    PCLvector_init(dst);
+
+    { // empty to empty
+        PCLvector_clear(dst);
+        PCLvector_clear(src);
+        PCLvector_copy(dst, src);
+        assert(PCLvector_empty(dst));
+    }
+
+    { // empty to non-empty
+        PCLvector_clear(dst);
+        PCLvector_clear(src);
+        for (i = 0; i < 22; ++i) {
+            custom_type ct = { i , i + 1 };
+            PCLvector_push(dst, ct);
+        }
+        PCLvector_copy(dst, src);
+        assert(PCLvector_empty(dst));
+    }
+
+
+    { // non-empty to empty
+        PCLvector_clear(dst);
+        PCLvector_clear(src);
+        for (i = 0; i < 234; ++i) {
+            custom_type ct = { 42 + i, 44 + i};
+            PCLvector_push(src, ct);
+        }
+        PCLvector_copy(dst, src);
+        assert(PCLvector_size(dst) == PCLvector_size(src));
+        for (i = 0; i < PCLvector_size(dst); ++i) {
+            assert(ctcmp(PCLvector_A(dst, i), PCLvector_A(src, i)) == 0);
+        }
+    }
+
+    { // smaller non-empty to non-empty
+        PCLvector_clear(dst);
+        PCLvector_clear(src);
+        for (i = 0; i < 22; ++i) {
+            custom_type ct = { 42 + i, 44 + i};
+            PCLvector_push(src, ct);
+        }
+        for (i = 0; i < 1024; ++i) {
+            custom_type ct = { i, i + 1 };
+            PCLvector_push(dst, ct);
+        }
+        PCLvector_copy(dst, src);
+        assert(PCLvector_size(dst) == PCLvector_size(src));
+        for (i = 0; i < PCLvector_size(dst); ++i) {
+            assert(ctcmp(PCLvector_A(dst, i), PCLvector_A(src, i)) == 0);
+        }
+    }
+
+    { // larger non-empty to non-empty
+        PCLvector_clear(dst);
+        PCLvector_clear(src);
+        for (i = 0; i < 1024; ++i) {
+            custom_type ct = { i, i + 1 };
+            PCLvector_push(src, ct);
+        }
+        for (i = 0; i < 22; ++i) {
+            custom_type ct = { 42 + i, 44 + i};
+            PCLvector_push(dst, ct);
+        }
+        PCLvector_copy(dst, src);
+        assert(PCLvector_size(dst) == PCLvector_size(src));
+        for (i = 0; i < PCLvector_size(dst); ++i) {
+            assert(ctcmp(PCLvector_A(dst, i), PCLvector_A(src, i)) == 0);
         }
     }
 
     PCLvector_destroy(ivec);
     PCLvector_destroy(fvec);
     PCLvector_destroy(cvec);
-    PCLvector_destroy(cmvec);
+    PCLvector_destroy(ctvec);
+    PCLvector_destroy(src);
+    PCLvector_destroy(dst);
     printf("Passed.\n");
 
     return 0;

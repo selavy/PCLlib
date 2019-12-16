@@ -58,6 +58,7 @@ typedef int type;
 #define PCLvector_destroy(v)                                                   \
     do {                                                                       \
         PCL_freearray((v).arr, (v).asize, sizeof((v).arr[0]));                 \
+        (v).arr = NULL;                                                        \
         (v).size = 0;                                                          \
         (v).asize = 0;                                                         \
     } while (0)
@@ -67,7 +68,7 @@ typedef int type;
 #define PCLvector_asize(v) ((v).asize)
 #define PCLvector_capacity(v) PCLvector_asize(v)
 #define PCLvector_empty(v) (PCLvector_size(v) == 0)
-#define PCLvector_clear(v) PCLvector_finalize(v)
+#define PCLvector_clear(v) PCLvector_destroy(v)
 #define PCLvector_resize(v, newsize)                                           \
     do {                                                                       \
         (v).asize = newsize;                                                   \

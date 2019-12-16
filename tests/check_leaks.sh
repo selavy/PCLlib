@@ -4,6 +4,8 @@ BIN=./build/
 OUTPUT=leak_check.output
 failures=0
 
+ninja -C ${BIN} || exit 1;
+
 #
 # C++ Tests
 #
