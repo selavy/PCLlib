@@ -1,6 +1,13 @@
 #ifndef PCL_VECTOR__H_
 #define PCL_VECTOR__H_
 
+/*
+ * TODO(selavy):
+ *  + PCLvector_erase(v, i) -> memmove
+ *  + PCLvector_eraserange(v, i1, i2) -> memmove
+ *  + get rid of PCLvector_create(). Too confusing to use?
+ */
+
 #include <stdlib.h>
 #include <string.h>
 
