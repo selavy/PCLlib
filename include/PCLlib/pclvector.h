@@ -8,8 +8,15 @@
  *  + get rid of PCLvector_create(). Too confusing to use?
  */
 
+#ifdef __cplusplus
+#include <cstdlib>
+#include <cstring>
+
+extern "C" {
+#else
 #include <stdlib.h>
 #include <string.h>
+#endif
 
 #ifndef PCL_reallocarray
 #ifdef reallocarray
@@ -105,5 +112,9 @@ typedef int type;
 /* private functions: */
 #define PCLvector__calcsize(size)                                              \
     ((size) != 0 ? (size)*PCLVECTOR_GROWTH_FACTOR : PCLVECTOR_DEFAULT_SIZE)
+
+#ifdef __cplusplus
+} /* extern "C" */
+#endif
 
 #endif /* PCL_VECTOR__H_ */
