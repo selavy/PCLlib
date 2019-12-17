@@ -1,38 +1,55 @@
 #include <catch2/catch.hpp>
 #include "PCLlib/pcltable.h"
 
-TEST_CASE("Round to power of 2")
-{
-    uint32_t x = 7;
-    uint32_t y = PCL_roundup32(x);
-    REQUIRE(y == 8);
-}
-
 TEST_CASE("Create table")
 {
-    PCL_table *t = PCL_create();
+    PCL_table *t = PCLtable_create();
     REQUIRE(t != NULL);
-    REQUIRE(PCL_size(t) == 0);
-    REQUIRE(PCL_asize(t) == 0);
-    REQUIRE(PCL_capacity(t) == 0);
-    PCL_destroy(t);
+    REQUIRE(PCLtable_size(t) == 0);
+    REQUIRE(PCLtable_asize(t) == 0);
+    REQUIRE(PCLtable_capacity(t) == 0);
+    PCLtable_destroy(t);
+}
+
+TEST_CASE("Resize table")
+{
+    PCL_table *t = PCLtable_create();
+    REQUIRE(t != NULL);
+    REQUIRE(PCLtable_size(t) == 0);
+    REQUIRE(PCLtable_asize(t) == 0);
+
+    PCLtable_resize(t, 8);
+    REQUIRE(PCLtable_asize(t) >= 8);
+
+    PCLtable_resize(t, 24);
+    REQUIRE(PCLtable_asize(t) >= 24);
+
+    PCLtable_destroy(t);
 }
 
 TEST_CASE("Insert + Lookup")
 {
-    int rc;
-    PCL_iter it;
+    PCL_result res;
     PCL_table *t;
+    const int N = 256;
 
-    t = PCL_create();
+    t = PCLtable_create();
     REQUIRE(t != NULL);
-    REQUIRE(PCL_empty(t) == true);
+    REQUIRE(PCLtable_empty(t) == true);
 
-    // it = PCL_put(t, 1, &rc);
-    // REQUIRE(rc == 0);
-    // REQUIRE(PCL_key(it) == 1);
-    // PCL_val(it) = 2;
-    // REQUIRE(PCL_size(t) == 1);
+    for (int i = 0; i < N; ++i) {
+        INFO("Inserting " << i << "...");
+        if (t->used + 1 >= t->ubound) {
+            INFO("Resizing...");
+        }
+        res = PCLtable_put(t, i);
+        REQUIRE(res.rval == 1);
+        REQUIRE(PCLtable_key(t, res.iter) == i);
+        PCLtable_val(t, res.iter) = i + 100;
+        REQUIRE(PCLtable_size(t) == i + 1);
+    }
+    REQUIRE(PCLtable_size(t) == N);
+    REQUIRE(PCLtable_asize(t) > N);
 
-    PCL_destroy(t);
+    PCLtable_destroy(t);
 }
