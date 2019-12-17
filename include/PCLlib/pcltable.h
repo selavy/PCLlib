@@ -96,6 +96,11 @@ int PCLtable_resize(PCL_table* t, size_t newsize);
 int PCLtable_resize_fast(PCL_table* t, size_t newsize);
 PCL_iter PCLtable_put(PCL_table *t, PCL_key_t k);
 PCL_result PCLtable_put2(PCL_table *t, PCL_key_t k);
+PCL_iter PCLtable_get(const PCL_table *t, PCL_key_t k);
+PCL_kv PCLtable_deref(PCL_table* t, PCL_iter it);
+int PCLtable_iter_eq(PCL_iter a, PCL_iter b);
+int PCLtable_iter_neq(PCL_iter a, PCL_iter b);
+PCL_iter PCLtable_iter_next(const PCL_table *t, PCL_iter it);
 #define PCL__MinTableSize 8
 #define PCL__HashLoadFactorUpperBound 0.77 /* TODO: tune */
 #define PCL__live(flags, i) ((flags[(i) / 4] & (1u << (2 * ((i) % 4)))) != 0)
@@ -273,7 +278,24 @@ PCL_result PCLtable_put2(PCL_table* t, PCL_key_t k)
     __builtin_unreachable();
 }
 
-PCL_kv PCL_deref(PCL_table* t, PCL_iter it)
+PCL_iter PCLtable_get(const PCL_table *t, PCL_key_t k)
+{
+    size_t h, mask = t->asize - 1;
+    PCL_key_t *keys = t->keys;
+    uint8_t *flags = t->flags;
+    h = hashfn(k) & mask;
+    for (;;) {
+        if (PCL__live(flags, h)) {
+            if (cmpfn(k, keys[h]) == 0)
+                return { h };
+        } else if (!PCL__tomb(flags, h)) {
+            return { t->asize };
+        }
+    }
+    __builtin_unreachable();
+}
+
+PCL_kv PCLtable_deref(PCL_table* t, PCL_iter it)
 {
     return { &t->keys[it.v], &t->vals[it.v] };
     /*
@@ -282,6 +304,27 @@ PCL_kv PCL_deref(PCL_table* t, PCL_iter it)
     kv.value = &t->vals[it.v];
     return kv;
     */
+}
+
+int PCLtable_iter_eq(PCL_iter a, PCL_iter b)
+{
+    return (a.v - b.v) == 0;
+}
+
+int PCLtable_iter_neq(PCL_iter a, PCL_iter b)
+{
+    return (a.v - b.v) != 0;
+}
+
+PCL_iter PCLtable_iter_next(const PCL_table *t, PCL_iter it)
+{
+    uint8_t* flags = t->flags;
+    size_t i;
+    for (i = it.v; i != t->asize; ++i) {
+        if (PCL__live(flags, i))
+            return { i };
+    }
+    return { i };
 }
 
 // #ifdef __cplusplus
