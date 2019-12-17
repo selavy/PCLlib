@@ -126,6 +126,14 @@ PCL_iter PCLtable_iter_next(const PCL_table *t, PCL_iter it);
 #define PCLtable_capacity(t) PCLtable_asize(t)
 #define PCLtable_finalize(t) PCLtable_clear(t)
 
+/*! @function
+  @abstract     Test whether a bucket contains data.
+  @param  h     Pointer to the hash table [khash_t(name)*]
+  @param  x     Iterator to the bucket [khint_t]
+  @return       1 if containing data; 0 otherwise [int]
+ */
+#define PCLtable_exists(t, x) PCL__live(t->flags, (x).v)
+
 /* TODO: implement */
 size_t PCL__hash_func(PCL_key_t key)
 {
