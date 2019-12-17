@@ -94,6 +94,8 @@ void PCLtable_destroy(PCL_table* t);
 int PCLtable_clear(PCL_table* t);
 int PCLtable_resize(PCL_table* t, size_t newsize);
 int PCLtable_resize_fast(PCL_table* t, size_t newsize);
+PCL_iter PCLtable_put(PCL_table *t, PCL_key_t k);
+PCL_result PCLtable_put2(PCL_table *t, PCL_key_t k);
 #define PCL__MinTableSize 8
 #define PCL__HashLoadFactorUpperBound 0.77 /* TODO: tune */
 #define PCL__live(flags, i) ((flags[(i) / 4] & (1u << (2 * ((i) % 4)))) != 0)
@@ -220,13 +222,25 @@ int PCLtable_resize_fast(PCL_table* t, size_t newsize)
  *  @abstract  Insert a key into the hash table.
  *  @param t   Pointer to the hash table. [PCL_table*]
  *  @param k   Key to insert.             [PCL_key_t]
- *  @param rc  Extra return code: -1 if operation failed;
- *             0 if the key is present in the table;
- *             1 if the bucket is empty;
- *             2 if the element was previously deleted; [int*]
- *  @return    Iterator to the inserted element [PCL_iter]
+ *  @return    Iterator to the inserted element or end [PCL_iter]
  */
-PCL_result PCLtable_put(PCL_table* t, PCL_key_t k)
+PCL_iter PCLtable_put(PCL_table *t, PCL_key_t k)
+{
+    return PCLtable_put2(t, k).iter;
+}
+
+/*! @function
+ *  @abstract  Insert a key into the hash table.
+ *  @param t   Pointer to the hash table. [PCL_table*]
+ *  @param k   Key to insert.             [PCL_key_t]
+ *  @return    Pair of iterator to the inserted element
+ *             and an extra return code:
+ *                 -1 if operation failed;
+ *                 0 if the key is present in the table;
+ *                 1 if the bucket is empty;
+ *                 2 if the element was previously deleted; [PCL_result]
+ */
+PCL_result PCLtable_put2(PCL_table* t, PCL_key_t k)
 {
     int rc;
     size_t mask, h;

@@ -42,7 +42,7 @@ TEST_CASE("Insert + Lookup")
         if (t->used + 1 >= t->ubound) {
             INFO("Resizing...");
         }
-        res = PCLtable_put(t, i);
+        res = PCLtable_put2(t, i);
         REQUIRE(res.rval == 1);
         REQUIRE(PCLtable_key(t, res.iter) == i);
         PCLtable_val(t, res.iter) = i + 100;
