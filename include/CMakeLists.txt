@@ -11,3 +11,15 @@ target_include_directories(PCLlib
         $<INSTALL_INTERFACE:include>
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
 )
+
+add_library(PCLlib++ INTERFACE)
+target_sources(PCLlib++
+    INTERFACE
+    ${CMAKE_CURRENT_SOURCE_DIR}/PCLlib/linear_open_address.h
+    )
+target_include_directories(PCLlib++
+    INTERFACE
+        $<INSTALL_INTERFACE:include>
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
+)
+# set_target_properties(PCLlib++ PROPERTIES CXX_STANDARD 17)

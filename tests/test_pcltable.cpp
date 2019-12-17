@@ -28,6 +28,7 @@ TEST_CASE("Resize table")
     PCLtable_destroy(t);
 }
 
+/*
 TEST_CASE("Insert + Lookup")
 {
     const int N = 256;
@@ -73,3 +74,4 @@ TEST_CASE("Insert + Lookup")
 
     PCLtable_destroy(t);
 }
+*/
