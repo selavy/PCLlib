@@ -9,7 +9,7 @@ ninja -C ${BIN} || exit 1;
 #
 # C++ Tests
 #
-echo "Running C++ tests..."
+echo -n "Running C++ tests... "
 valgrind ${BIN}/tests/unittest > /dev/null 2> $OUTPUT
 if [ $? -ne 0 ]
 then
@@ -33,7 +33,7 @@ fi;
 C90_TESTS=(test-pclvector-c90)
 for exe in ${C90_TESTS[@]};
 do
-    echo "Running ${exe}..."
+    echo -n "Running ${exe}... "
     output=leak_check.${exe}.output
     valgrind ${BIN}/tests/${exe} > /dev/null 2> $output
     if [ $? -ne 0 ]
