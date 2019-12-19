@@ -5,6 +5,7 @@ target_sources(PCLlib
     ${CMAKE_CURRENT_SOURCE_DIR}/PCLlib/pclvector.h
     ${CMAKE_CURRENT_SOURCE_DIR}/PCLlib/pcltable.h
     ${CMAKE_CURRENT_SOURCE_DIR}/PCLlib/pclarray.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/PCLlib/loa_table.h
     )
 target_include_directories(PCLlib
     INTERFACE
